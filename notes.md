@@ -229,3 +229,84 @@ Set Methods - .setFullYear(), .setMinutes(), .setSeconds()
 .toUTCString() // Converts a date to a string using the UTC Time Zone
 .ISOString() // Converts UTC time into a simplified ISO-8601 format
 ```
+
+## Functions
+
+#### Introduction
+
+- A function is a block of code that is defiend once and then may be executed many times.
+- Once a function is declared, it is executed any time it is invoked or called
+- Functions are:
+  First class (Treated as values)
+  Higher Order - receive funcations as arguments or can return a function
+  Closures - Establish context for code execution
+
+#### Function Declaration
+
+- The most common way to define a function is a function declaration. The function keyword is followed by the function name
+
+```js
+function funDeclaration() {
+	return ...
+}
+```
+
+#### First Class Functions
+
+- Functions are first class, as they can be treated as a value:
+  1. A function can be assigned to a variable similar to a primitive value
+  2. A function can be stored in an array
+  3. A function can be passed to another function as an argument
+  4. A function can also be returned from a function
+  5. A function can be assigned to a property of an object, this is called a method
+
+```js
+function sum(num1, num2) {
+  return num1 + num2;
+}
+// passing a function to an array
+const arr = [20, 30, sum];
+
+let result = arr[2](arr[0], arr[1]);
+
+console.log(result); // 50
+```
+
+#### Types of Functions
+
+- You have different types of functions:
+
+```js
+function outer(num1, num2) {
+  // Outer functions, as well as named
+  let num3 = (function () {
+    // inner function, as well as anonymous
+    return num1 + num2;
+  })(); // This is invoked immediately it is an IIFE
+  return [num1, num2, num3];
+}
+
+const arr = outer(0, 1);
+
+console.log(arr); // (3) [0,1,1]
+```
+
+- Function Expressions vs Function Declaration
+
+```js
+const greeting = function (name) {
+  // function expression (the variable is given a value)
+  let greet = `Welcome to the course ${name}`;
+  let greetDiv = document.getElementById('greet');
+  setTimout(function () {
+    // anonymous function is passed to the setTimeout method
+    greetDiv.innerHTML = greet;
+  }, 1000);
+};
+
+greeting('user1');
+
+// Welcome to the course user1!
+```
+
+- Recursive functions
