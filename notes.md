@@ -232,7 +232,7 @@ Set Methods - .setFullYear(), .setMinutes(), .setSeconds()
 
 ## Functions
 
-#### Introduction
+##### Introduction
 
 - A function is a block of code that is defiend once and then may be executed many times.
 - Once a function is declared, it is executed any time it is invoked or called
@@ -241,7 +241,7 @@ Set Methods - .setFullYear(), .setMinutes(), .setSeconds()
   Higher Order - receive funcations as arguments or can return a function
   Closures - Establish context for code execution
 
-#### Function Declaration
+##### Function Declaration
 
 - The most common way to define a function is a function declaration. The function keyword is followed by the function name
 
@@ -251,7 +251,7 @@ function funDeclaration() {
 }
 ```
 
-#### First Class Functions
+##### First Class Functions
 
 - Functions are first class, as they can be treated as a value:
   1. A function can be assigned to a variable similar to a primitive value
@@ -272,7 +272,7 @@ let result = arr[2](arr[0], arr[1]);
 console.log(result); // 50
 ```
 
-#### Types of Functions
+##### Types of Functions
 
 - You have different types of functions:
 
@@ -309,4 +309,109 @@ greeting('user1');
 // Welcome to the course user1!
 ```
 
-- Recursive functions
+##### Recursive functions - when a function calls itself
+
+```js
+function fib(sequence, len) {
+  let size = sequence.length;
+  if (size >= len) {
+    return sequence; // If condition has been met, return the sequence.
+  }
+  sequence.push(sequence[size - 2] + sequence[size - 1]);
+  return fib(sequence, len); // Call itself with the ‘return’ keyword.
+}
+
+const fibSeq = fib([0, 1], 10); // break point is given as length of 10
+
+console.log(fibSeq); // (10) [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+```
+
+- Infinite recursive functions occur when there is no exit condition, resulting in an error due to the call stack being maxed out
+
+##### Higher order functions
+
+- Functions that operates on another function, either by receiving it as an argument or returning it as a value
+
+```js
+// The map method of an array object is a higher-order function as it accepts a function as an argument
+const nums = [1, 2, 3, 4, 5];
+const newNums = nums.map((num) => num * 2); // callback function
+console.log(newNums);
+
+// This example shows a higher-order function because it returns a function which is then used later.
+const createMultiplyFunction = function (num) {
+  return (num1) => num1 * num;
+};
+
+const multiplyBy10 = createMultiplyFunction(10);
+console.log(multiplyBy10(5));
+```
+
+##### Function Hoisting
+
+- Function Declarations are hoisted
+
+```js
+sumExpression(50, 100); // error
+
+const sumExpression = function (num1, num2) {
+  console.log(num1 + num2);
+};
+
+sumDeclaration(5, 10); // no error
+
+function sumDeclaration(num1, num2) {
+  console.log(num1 + num2);
+}
+```
+
+##### Closure
+
+- A Closure allows a function access to its parent scope - even if the parent scope has completed execution
+
+```js
+// This code shows an example of closure. The 'createScoreFunction' returns a function that adds to the scores array and thenprints the number of values. The 'scores' array is private and cannot be manipulated except using 'addScore'.
+
+function createScoreFunction() {
+  scores = [];
+  return function (score) {
+    // score takes in the argument of the parent
+    scores.push(score);
+    console.log(`Total scores: ${scores.length}`);
+  };
+}
+
+// The function returned to 'addScore' still has access to 'scores' through closure.
+const addScore = createScoreFunction();
+
+addScore(70); // Output - Total scores: 1
+```
+
+##### Apply, Call and Bind
+
+- The default value of `this`can be changed using one of three methods available for functions
+- `apply()`invokes a function and assigns the object passed in to the keyword `this`- arguments for the function are passed in as a array
+- `call()`invokes a function and assigns the object passed in to the keyword `this`- arguments for the function are passed in as a comma separated list
+- `bind()`returns a new function. The object passed in is assigned to the keyword `this`when that new function is invoked - arguments may be bound to the new function as well.
+
+```js
+// This example shows an application of call, apply and bind to invoke a function on the 'objGreet' object, while assigning thevalue of 'this' to a different object; either 'user1' or 'user2'.
+let objGreet = {
+  morningGreet(punct) {
+    console.log(`Good morning ${this.firstName}${punct}`);
+  },
+  eveningGreet(punct) {
+    console.log(`Good evening ${this.firstName}${punct}`);
+  },
+};
+let user1 = {
+  firstName: 'Mary',
+};
+let user2 = {
+  firstName: 'Sam',
+};
+
+objGreet.morningGreet.call(user1, '!'); // call invokes the function, and passes in the 'punct' parameter.
+objGreet.eveningGreet.apply(user2, ['?']); // apply invokes the function, and passes in the 'punct' parameter as an array.
+objGreet.eveningGreet.bind(user1, '.')(); // bind returns a function and binds the 'punct' parameter to the function, which isinvoked using parentheses.Output
+```
