@@ -63,11 +63,11 @@ var name;
 - A variable of one data type can be explicityly coverted to another data type which is called Typecasting
 - Some methods of typecasting:
   1. `Number()`
-  2. `String()
-  3. `Bolean()
-  4. `toString()
-  5. `parseInt()
-  6. `parseFloat()
+  2. `String()`
+  3. `Bolean()`
+  4. `toString()`
+  5. `parseInt()`
+  6. `parseFloat()`
 
 ### Collections
 
@@ -148,4 +148,84 @@ quizeScores.add('quiz 2', [88, 23, 11, 32]);
 quizeScores.add('quiz 3', [31, 11, 81, 52]);
 
 console.log(quizScores.values); // MapIterator {Array(4), Array(4), Array(4)}
+```
+
+### String Methods
+
+- Strings can be created from as a primitive, from a string literal or as an object using the `String()` constructor
+
+```js
+// String literal
+const str1 = 'This is a string literal';
+console.log(str1); // This is a string literal
+
+// String() constructor
+const str2 = new String('This is also a string.');
+console.log(str2); // String{"This is also a string."}
+```
+
+- Common String Methods:
+
+```js
+.toLowerCase() // Changes the string to lower case
+.toUpperCase() // Changes the string to upper case
+.concat(str) // combines two or more strings and returns a new string
+.includes(searchString, position) // determines whether a given string contains another
+.indexOf(searchValue, fromIndex) // Returns the index of a value in the specified string or -1 if not found
+.replace(searchFor, replaceWith) // Searches for string or RegExp and replaces it with another string or value, returning a new string
+.substring(indexStart, indexEnd) // returns a part of the string between start and end indexes or the start index to the end of the string
+.search() // Used to search for a match between a reged and string
+.padStart(length of the string needed, value) // Pads the beginning of a string
+.padEnd(length of the string needed, value) // Pads the end of a string
+.trim() // Removes blank characters or white space from both ends of a string
+```
+
+### Number Methods
+
+- Numbers can be created as a primtive or by using the `Number()` constructor
+
+```js
+//Primitive with number litera;
+const num1 = 3.14;
+console.log(num1); // 3.14
+
+// Number object using the constructor
+const num2 = new Number(3.14);
+console.log(num2); // Number {3.14}
+```
+
+- Some common Number methods:
+
+```js
+.isNan() // Used to determine whether a value is NaN
+.isInteger() // Used to determing whether a value is an integer
+parseFloat(3.12) // Returns the number with the decimal reading eg. .parseFloat(2) 3.12
+parseInt(3.12) // Returns the integer and not a floating point number eg .parseInt() 3
+.toFixed(2) // Returns a number with with two places after the decimal
+.toString() // Returns a string of the number where the method was called
+.valueOf() // Returns the primitive number eg. Number(2.34ghsggs).valueOf() -> 2.34
+```
+
+### Dates
+
+- A Date object can be used to represent a single moment in time. It contains a Number that represents milliseconds since 00:00:00 UTC on January 1st, 1970 (called UNIX epoch)
+- The `Date()`constructor can be used to create a new Date object
+
+```js
+const now = new Date();
+console.log(now); // Sun Feb 19 2023 19:50:12 GMT+0200 (South Africa Standard Time)
+```
+
+- Common Date methods:
+
+```js
+.now() // Returns current time
+.parse() // Parses a date string and returns the number of milliseconds since UNIX epoch
+.UTC() // Retruns a number of milliseconds for the specified date and time in UTC since INIX epoch
+Get Methods - .getDay(), .getMonth, .getHours
+Set Methods - .setFullYear(), .setMinutes(), .setSeconds()
+.toString() // Returns a string value of a date object
+.toDateString() // Returns the date value of the Date object without the time in a string format
+.toUTCString() // Converts a date to a string using the UTC Time Zone
+.ISOString() // Converts UTC time into a simplified ISO-8601 format
 ```
