@@ -232,7 +232,7 @@ Set Methods - .setFullYear(), .setMinutes(), .setSeconds()
 
 ## Functions
 
-##### Introduction
+### Introduction
 
 - A function is a block of code that is defiend once and then may be executed many times.
 - Once a function is declared, it is executed any time it is invoked or called
@@ -241,7 +241,7 @@ Set Methods - .setFullYear(), .setMinutes(), .setSeconds()
   Higher Order - receive funcations as arguments or can return a function
   Closures - Establish context for code execution
 
-##### Function Declaration
+### Function Declaration
 
 - The most common way to define a function is a function declaration. The function keyword is followed by the function name
 
@@ -251,7 +251,7 @@ function funDeclaration() {
 }
 ```
 
-##### First Class Functions
+### First Class Functions
 
 - Functions are first class, as they can be treated as a value:
   1. A function can be assigned to a variable similar to a primitive value
@@ -272,7 +272,7 @@ let result = arr[2](arr[0], arr[1]);
 console.log(result); // 50
 ```
 
-##### Types of Functions
+### Types of Functions
 
 - You have different types of functions:
 
@@ -309,7 +309,7 @@ greeting('user1');
 // Welcome to the course user1!
 ```
 
-##### Recursive functions - when a function calls itself
+### Recursive functions - when a function calls itself
 
 ```js
 function fib(sequence, len) {
@@ -328,7 +328,7 @@ console.log(fibSeq); // (10) [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
 
 - Infinite recursive functions occur when there is no exit condition, resulting in an error due to the call stack being maxed out
 
-##### Higher order functions
+### Higher order functions
 
 - Functions that operates on another function, either by receiving it as an argument or returning it as a value
 
@@ -347,7 +347,7 @@ const multiplyBy10 = createMultiplyFunction(10);
 console.log(multiplyBy10(5));
 ```
 
-##### Function Hoisting
+### Function Hoisting
 
 - Function Declarations are hoisted
 
@@ -365,7 +365,7 @@ function sumDeclaration(num1, num2) {
 }
 ```
 
-##### Closure
+### Closure
 
 - A Closure allows a function access to its parent scope - even if the parent scope has completed execution
 
@@ -387,7 +387,7 @@ const addScore = createScoreFunction();
 addScore(70); // Output - Total scores: 1
 ```
 
-##### Apply, Call and Bind
+### Apply, Call and Bind
 
 - The default value of `this`can be changed using one of three methods available for functions
 - `apply()`invokes a function and assigns the object passed in to the keyword `this`- arguments for the function are passed in as a array
