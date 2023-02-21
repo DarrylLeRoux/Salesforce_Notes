@@ -82,30 +82,72 @@
 
 /* This example shows how to pass an object as a parameter to a wrapper function and invoke the call() method in the wrapperfunction. (Part 1 of 2) */
 // Decorator function which accepts an object of the class and the function to be wrapped
-function log(obj, fn) {
-  return function () {
-    console.log('Execution of ' + fn.name);
-    console.time('fn');
+// function log(obj, fn) {
+//   return function () {
+//     console.log('Execution of ' + fn.name);
+//     console.time('fn');
 
-    // Invoke function with object's context
-    let val = fn.call(obj);
-    console.timeEnd('fn');
-    return val;
-  };
-}
+//     // Invoke function with object's context
+//     let val = fn.call(obj);
+//     console.timeEnd('fn');
+//     return val;
+//   };
+// }
 
-class User {
-  constructor(name, age) {
-    this.name = name;
-    this.age = age;
-  }
+// class User {
+//   constructor(name, age) {
+//     this.name = name;
+//     this.age = age;
+//   }
 
-  getUser() {
-    return `[${this.name}][${this.age}]`;
-  }
-}
+//   getUser() {
+//     return `[${this.name}][${this.age}]`;
+//   }
+// }
 
-let obj = new User('James', 24);
-// Decorate class method
-let getUser = log(obj, obj.getUser);
-console.log(getUser());
+// let obj = new User('James', 24);
+// // Decorate class method
+// let getUser = log(obj, obj.getUser);
+// console.log(getUser());
+
+// /* This example shows how to use the decorator syntax and three parameters (target, name, and descriptor) to extend a classmethod. (Part 1 of 2) */
+
+// // Decorator function
+// function methodLogger(target, name, descriptor) {
+//   // Implementation here
+//   console.log(`[Class=${target.constructor.name}] [Method=${name}]`);
+//   let fn = descriptor.value;
+//   descriptor.value = (nameVal) => {
+//     console.log(`${name} function started`);
+//     return fn(nameVal);
+//   };
+//   return descriptor;
+// }
+
+// /* This example shows how to use the decorator syntax and three parameters (target, name, and descriptor) to extend a classmethod. (Part 2 of 2) */
+
+// class Human {
+//   constructor(name) {
+//     this.name = name;
+//   }
+//   // Decorated class method
+//   @methodLogger
+//   save(name) {
+//     localStorage.setItem('name', name);
+//     return 'Successful';
+//   }
+// }
+
+// let human = new Human('Sam');
+// console.log(human.save());
+// class Delivery {
+//   constructor(id, date, destination) {
+//     this.id = id;
+//     this.date = date;
+//     this.destination = destination;
+//   }
+// }
+// let delivery = new Delivery('LX2361', new Date(), 'DXB');
+// let descriptors = Object.getOwnPropertyDescriptor(delivery, 'destination');
+
+// console.log(descriptors);

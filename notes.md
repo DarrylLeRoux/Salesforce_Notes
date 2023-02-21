@@ -1318,3 +1318,156 @@ let obj = new User('James', 24);
 let getUser = log(obj, obj.getUser);
 console.log(getUser()); // [James] [24]
 ```
+
+#### Using the Decorator Syntax
+
+The decorator syntax can be used to decorate classes and class methods. The method or class is prefixed with `@nameOfDecorator`
+
+```js
+// This example shows how the decorator syntax is used.
+// Decorator function
+function logPropertyDecorator(...args) {
+  // implementation here
+}
+
+class Student {
+  constructor(name, grade) {
+    this.name = name;
+    this.grade = grade;
+  }
+
+  // Decorated class method
+  @logPropertyDecorator
+  getStudent() {
+    return `[Name=${this.name}] [Grade=${this.grade}]`;
+  }
+}
+```
+
+To decorate a class method, the method is prefixed with `@nameOfDecorator`. The decorator receives three parameters, namely, `target`, `name`, and `descriptor`.
+
+```js
+/* This example shows how to use the decorator syntax and three parameters (target, name, and descriptor) to extend a classmethod. (Part 1 of 2) */
+
+// Decorator function
+function methodLogger(target, name, descriptor) {
+  // Implementation here
+  console.log(`[Class=${target.constructor.name}] [Method=${name}]`);
+  let fn = descriptor.value;
+  descriptor.value = (nameVal) => {
+    console.log(`${name} function started`);
+    return fn(nameVal);
+  };
+  return descriptor;
+}
+
+/* This example shows how to use the decorator syntax and three parameters (target, name, and descriptor) to extend a classmethod. (Part 2 of 2) */
+
+class Human {
+  constructor(name) {
+    this.name = name;
+  }
+  // Decorated class method
+  @methodLogger
+  save(name) {
+    localStorage.setItem('name', name);
+    return 'Successful';
+  }
+}
+
+let human = new Human('Sam');
+console.log(human.save());
+```
+
+To decorate a class, the class is prefixed with` @nameOfDecorator`. The decorator receives only the target parameter which refers to the object passed to the decorator.
+
+```js
+// This example shows how to use the decorator syntax and the target parameter to extend a class.
+// Decorator function
+function generateIdDecorator(target) {
+  console.log(`${target.name} Class Constructor Modified`);
+  return function (date, type, value) {
+    this.date = date;
+    this.type = type;
+    this.value = value;
+    // getRandomId function will return a random ID
+    this.id = getRandomId();
+  };
+}
+
+@generateIdDecorator
+class Transaction {
+  constructor(date, type, value) {
+    this.date = date;
+    this.type = type;
+    this.value = value;
+  }
+}
+
+let transaction1 = new Transaction(new Date(), 'Internal', 500000);
+console.log(`[transaction1][ID=${transaction1.id}]`);
+[transaction1][(ID = 796)];
+
+let transaction2 = new Transaction(new Date(), 'External', 200000);
+console.log(`[transaction2][ID=${transaction2.id}]`);
+[transaction2][(ID = 977)];
+```
+
+#### Using Property Descriptor
+
+Each object property has a property descriptor. The `Object.getOwnPropertyDescriptor()` method can be used to return a property descriptor with four attributes for an own property.
+
+- `value` attribute refers to the value of the property
+- `writeable` is true if the value of the property may be changed
+- `configurable` is true if the property descriptors of the property can be changed
+
+```js
+/* This example shows how to use the Object.getOwnPropertyDescriptor() method to get the attributes of a property defined on an object. */
+class Delivery {
+  constructor(id, date, destination) {
+    this.id = id;
+    this.date = date;
+    this.destination = destination;
+  }
+}
+let delivery = new Delivery('LX2361', new Date(), 'DXB');
+let descriptors = Object.getOwnPropertyDescriptor(delivery, 'destination');
+
+console.log(descriptors);
+// Output:
+/* {
+    "value": "DXB",
+    "writable": true,
+    "enumerable": true,
+    "configurable": true
+} */
+```
+
+A decorator can be used to modify the attributes of the property descriptor that is received as a parameter. For example, it can be used to make a class method read only by setting the value of the `writable` attribute to `false`
+
+```js
+/* This example shows how to modify ‘descriptor.writable’ in a decorator called ‘readonly’ to make a class method read only. */
+// Decorator function
+function readOnlyDecorator(target, name, descriptor) {
+  console.log(`[Class=${target.constructor.name}] [Method=${name}]`);
+  descriptor.writable = false;
+  return descriptor;
+}
+
+class Product {
+  constructor(id, name) {
+    this.id = id;
+    this.name = name;
+  }
+  // Decorated class method
+  @readOnlyDecorator
+  getProduct() {
+    return `[ID=${this.id}] [Name=${this.name}]`;
+  }
+}
+
+let product = new Product('YK232', 'Apples');
+// Trying to overwrite "getProduct" method
+product.getProduct = () => {};
+console.log(product.getProduct());
+```
