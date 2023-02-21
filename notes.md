@@ -952,3 +952,369 @@ class Employee extends User {
 let employ1 = new Employee('team_lead', 'team@comicsoft.com', 345);
 console.log(employ1);
 ```
+
+#### Super()
+
+Classes provide the `super` keyword which can be used inside the constructor of the child class to call the constructor of the parent class. Child classes must use `super` before using the `this` keyword to assign values.
+
+```js
+// this example shows what happens when the 'super' keyword is not used before the 'this' keyword in a child class
+
+class User {
+  constructor(user, email) {
+    this.user = user;
+    this.email = email;
+  }
+}
+
+class Employee extends User {
+  constructor(id) {
+    this.employeeID = id;
+  }
+}
+
+let employ1 = new Employee(1); //Uncaught reference error: Must call super costructor
+```
+
+```js
+// this example shows how to use the 'super' keyword in a class to call the constructor in the parent class
+
+class User {
+  constructor(user, email) {
+    this.user = user;
+    this.email = email;
+  }
+}
+
+class Employee extends User {
+  constructor(user, email, id) {
+    super(user, email);
+    this.employeeID = id;
+  }
+}
+
+let employ1 = new Employee('team_lead', 'team@comicsoft.com', 345);
+console.log(employ1);
+```
+
+## Modules
+
+#### Introduction
+
+Javascript modules allow code to be structured and separated into different files that can include variables, functions and/or classes that are logically related, allowing for modular code development.
+
+A top-level item within a module can be exported by using the export statement. It’s possible to export functions, variables declared using var, let or const, and classes. Exporting an item allows other modules to access it.
+
+```js
+/*The following example shows how to use the export statement in a module by placing the ‘export’ keyword in front of the feature (in this case, a function) that needs to be exported .*/
+export function multiplay(n) {
+  return n * 2;
+}
+
+/*The following example shows how to use a single export statement at the end of a module to export the desired features (in this case, a function and two variables) .*/
+const num = 13;
+let value = 19;
+
+function multiply(n) {
+  return n * 2;
+}
+export { multiply, num, value };
+```
+
+#### Exporting
+
+There are two types of exports - ===named=== and ===default===
+
+```js
+// Named
+export function add(num1, num2) {
+  // will take add as the name
+  return num1 + num2;
+}
+
+// Multiple functions to export using a single export statement
+
+function add(num1, num2) {
+  return num1 + num2;
+}
+
+function subtract(num1, num2) {
+  return num1 - num2;
+}
+
+export { add, subtract };
+```
+
+```js
+
+// Default
+
+/*This example shows how to use a default export in a module by using the ‘export default’ syntax before a class that should be exported .*/
+export default class {
+  constructor() {
+  // Implementation here
+  }
+}
+/*This example shows how to use a default export in a module by using the ‘export default’ syntax before an anonymous function that needs to be exported .*/
+export default function () {
+  // Implementation here
+}
+```
+
+#### Importing
+
+The `import`directive can be used to load the feature from the module path relative to the crrent file
+
+```js
+/*The following example shows how to import a function in main.js from another module called helper.js in which the function has been exported.*/
+
+/*main.js*/
+import { multiply } from './modules/helper.js';
+
+/*helper.js*/
+export function multiply(x, y) {
+  return x * y;
+}
+```
+
+```js
+/*This example shows how to import multiple functions and variables from another module.*/
+
+/*modules.js*/
+function multiply(num1, num2) {
+  return num1 * num2;
+}
+
+function divide(num1, num2) {
+  return num1 / num2;
+}
+
+const SERVER_IP = '32.56.98.2';
+
+export { multiply, divide, SERVER_IP };
+
+/*main.js*/
+import { multiply, divide, SERVER_IP } from './modules.js';
+```
+
+All the exported features of a module can be imported using the `*` character. The features are imported inside the specified object using `* as objectName`. They can be accessed using the properties of the object.
+
+```js
+/*This example shows how to import all the exported features of a module using the * character into an object and access them using the properties of the object. */
+/*utilities.js*/
+function print() {
+  // Implementation here
+}
+
+function convert() {
+  // Implementation here
+}
+export { print, convert };
+
+/*index.js*/
+import * as utilities from './utilities.js';
+
+utilities.print();
+utilities.convert();
+```
+
+#### Renaming Imports and Exports
+
+In `import` and `export` statements, the `as` keyword can be used to change the name that is used to identify the feature within the top-level module
+
+```js
+/*This example shows how to rename an export using the ‘as’ keyword. */
+
+/*utilities.js*/
+function saveFunc() {
+  // Implementation here
+}
+
+function openFunc() {
+  // Implementation here
+}
+
+/*This example shows how to rename an import using the ‘as’ keyword. */
+export { saveFunc as save, openFunc as open };
+
+/*index.js*/
+import { save as saveFile, open as openFile } from './utilities.js';
+```
+
+#### Dynamic Importing
+
+in ES2020, dynamic module loading is possible by calling the `import()`as a function, passing the path tp the module as a parameter. The function returns a promise, which fulfills with a module object. The object can be used to access the ecported features
+
+```js
+/*The following syntax can be utilized for dynamic module loading. It increases the performance of the web page since a moduleis loaded only when it’s needed. */
+
+import('./modules/helper.js').then((module) => {
+  //Access the exports via the module object
+});
+```
+
+```js
+/*This example shows how to load a module dynamically when a button is clicked on the page and access the module object’s exports for a specific use case. */
+
+const btn = document.getElementById('btn-convert');
+let blob;
+btn.addEventListener('click', loadModule);
+
+function loadModule() {
+  import('../modules/utilities.js').then((module) => {
+    blob = module.convert(file); // ‘file’ has been defined earlier in the code.
+  });
+}
+```
+
+## Function Decorators
+
+Function decorators are wrapper functions. They take a function as an argument and return a new function that enhances the function argument without modifying it.
+
+```js
+function displayName(name) {
+  console.log(name);
+}
+
+function displayNameDecorator(fn) {
+  return function (name) {
+    const str = 'Welome to the hotel, ' + name + '!';
+    fn(str);
+  };
+}
+
+const customerName = displayNameDecorator(displayName);
+customerName('John Wayne');
+```
+
+```js
+// This example shows the structure of a decorator and how an existing function can use it.
+// Decorator function receives a function
+function loggerDecorator(fn) {
+  // Decorator function returns a function that contains altered behavior
+  return function (...args) {
+    console.log('Started function ' + fn.name);
+    console.log(args);
+    fn(...args);
+  };
+}
+
+function getUser(userId, authKey) {
+  //Implementation here
+}
+
+let getUserFn = loggerDecorator(getUser);
+getUserFn('AC102', 'XpamsIsd87js');
+```
+
+A decorator is useful for adding features to an existing function without increasing its complexity. It can be reused to alter the behavior of multiple functions used by an application. Multiple decorators can be combined if required.
+
+```js
+// This example shows two functions using the same decorator. (Part 1 of 2)
+var data;
+// Decorator function to handle errors
+function errorHandlerDecorator(fn) {
+  return function (...args) {
+    try {
+      console.log('Trying function ' + fn.name);
+      fn(...args);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
+
+// This example shows two functions using the same decorator. (Part 2 of 2)
+// Function to parse JSON
+function parse(str) {
+  let obj = JSON.parse(str);
+  console.log(obj);
+  return obj;
+}
+
+// function to get details from local storage
+function getUser() {
+  data.user = localStorage.getItem('user');
+}
+
+let parseFn = errorHandlerDecorator(parse);
+let getUserFn = erorrHandlerDecorator(getUser);
+
+getUserFn();
+parseFn('/{}');
+```
+
+#### Decorating Classes and Class Methods
+
+Although a higher-order function (a function that receives a function as an argument or returns another function) can serve as a decorator to extend a JavaScript function, the same cannot be used to extend classes and methods.
+
+A higher-order function that receives only the class method as a parameter cannot access the object properties.
+
+The context of the object is missing when a higher-order function receives only the class method as a parameter.
+
+The value of the ‘this’ keyword is not preserved due to the missing context.
+
+```js
+// This example shows the use of a higher-order function to extend a class method and why it doesn’t work as intended.(Part 1 of 2)
+// Decorator function
+function log(fn) {
+  return function () {
+    console.log('Execution of ' + fn.name); // execution of getUser
+    console.time('fn');
+    let val = fn();
+    console.timeEnd('fn');
+    return val;
+  };
+}
+
+// This example shows the use of a higher-order function to extend a class method and why it doesn’t work as intended.(Part 2 of 2)
+class User {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+  getUser() {
+    return `[${this.name}][${this.age}]`;
+  }
+}
+let obj = new User('James', 24);
+
+// Decorate class method
+let getUser = log(obj.getUser);
+// When the ‘getUser’ method is called, it returns an anonymous function which is returned by the log decorator. The value of‘this’ inside an anonymous function refers to the global object, not the user object, which is why the TypeError occurs.
+console.log(getUser()); // Uncaught TypeError: cannot read property of 'name' of undefined
+```
+
+In order to extend a class method, the object of the class can be passed as a parameter to the wrapper function and the `call()` method can be used in the function to invoke the class method with the object as the parameter.
+
+```js
+/* This example shows how to pass an object as a parameter to a wrapper function and invoke the call() method in the wrapperfunction. (Part 1 of 2) */
+// Decorator function which accepts an object of the class and the function to be wrapped
+function log(obj, fn) {
+  return function () {
+    console.log('Execution of ' + fn.name); // Execution of getUser
+    console.time('fn');
+
+    // Invoke function with object's context
+    let val = fn.call(obj);
+    console.timeEnd('fn'); // fn: 0.009765625 ms
+    return val;
+  };
+}
+
+class User {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  getUser() {
+    return `[${this.name}][${this.age}]`;
+  }
+}
+
+let obj = new User('James', 24);
+// Decorate class method
+let getUser = log(obj, obj.getUser);
+console.log(getUser()); // [James] [24]
+```

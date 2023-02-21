@@ -63,19 +63,49 @@
 
 // Super()
 
+// class User {
+//   constructor(user, email) {
+//     this.user = user;
+//     this.email = email;
+//   }
+// }
+
+// class Employee extends User {
+//   constructor(user, email, id) {
+//     super(user, email);
+//     this.employeeID = id;
+//   }
+// }
+
+// let employ1 = new Employee('team_lead', 'team@comicsoft.com', 345);
+// console.log(employ1);
+
+/* This example shows how to pass an object as a parameter to a wrapper function and invoke the call() method in the wrapperfunction. (Part 1 of 2) */
+// Decorator function which accepts an object of the class and the function to be wrapped
+function log(obj, fn) {
+  return function () {
+    console.log('Execution of ' + fn.name);
+    console.time('fn');
+
+    // Invoke function with object's context
+    let val = fn.call(obj);
+    console.timeEnd('fn');
+    return val;
+  };
+}
+
 class User {
-  constructor(user, email) {
-    this.user = user;
-    this.email = email;
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  getUser() {
+    return `[${this.name}][${this.age}]`;
   }
 }
 
-class Employee extends User {
-  constructor(user, email, id) {
-    super(user, email);
-    this.employeeID = id;
-  }
-}
-
-let employ1 = new Employee('team_lead', 'team@comicsoft.com', 345);
-console.log(employ1);
+let obj = new User('James', 24);
+// Decorate class method
+let getUser = log(obj, obj.getUser);
+console.log(getUser());
