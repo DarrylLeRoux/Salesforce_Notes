@@ -421,9 +421,9 @@ objGreet.eveningGreet.bind(user1, '.')(); // bind returns a function and binds t
 ### Introduction
 
 - There are three ways to create an object:
-  1. Using the `Object()`constructor
-  2. the object initializer - also known as the object literal syntax
-  3. The `Object.create()`method
+  1.  Using the `Object()`constructor
+  2.  the object initializer - also known as the object literal syntax
+  3.  The `Object.create()`method
 
 ```js
 // Object() constructor
@@ -452,9 +452,9 @@ user3.created = new Date();
 ### Enumerating Object Properties
 
 - There are three ways of listing/traversing the properties of an object
-  1. for...in loop - can be utilized to traverse all the enumerable properties of an object and its prototype chain
-  2. `Objects.keys(0)`method can be used to get an array of all the own enumerable property names of an object named (o)
-  3. `Object.getOwnPropertyNames(o)`can be used to get all the own property names (enumerable or not) of an object names 'o'
+  1.  for...in loop - can be utilized to traverse all the enumerable properties of an object and its prototype chain
+  2.  `Objects.keys(0)`method can be used to get an array of all the own enumerable property names of an object named (o)
+  3.  `Object.getOwnPropertyNames(o)`can be used to get all the own property names (enumerable or not) of an object names 'o'
 
 ```js
 // These examples show how to enumerate the properties of the following object.
@@ -567,16 +567,16 @@ console.log(conf); // {device: "microwave", on: true}
 ```js
 // This example function sums parameters passed to it and uses the arguments object to retrieve the parameters
 function add() {
-  let sum = 0;
-  for (let i inarguments) {
-    sum += arguments[i]; // the arguments object is "Array-like"
-  }
+	let sum = 0;
+	for (let i inarguments) {
+		sum += arguments[i]; // the arguments object is "Array-like"
+	}
 console.log(`The sum of the ${arguments.length} numbers is ${sum}`);
 
 // Standard Array methods are not available in "Array-like" objects.
 // So, the following will throw an error.
-  arguments.sort();
-}
+	arguments.sort();
+	}
 // This works, obviously
 add(62, 34, 45, 93);
 ```
@@ -680,9 +680,43 @@ onsole.log(user);
 
 - When a property is accessed, it is sought on the object, the prototype of the object, the prototype of the prototype, and so on, until the end of the prototype chain is reached.
 
+```js
+// In this example, a “hello” method is added to the Animal prototype and then modified to illustrate how it impacts instances of the object.
+function Animal(name) {
+  this.name = name;
+}
+
+let cat = new Animal('Kitty');
+let dog = new Animal('Puppy');
+Animal.prototype.hello = function () {
+  // create a function
+  console.log(`Hi, my name is ${this.name}.`);
+};
+cat.hello(); // Hi, my name is Kitty
+dog.hello(); // Hi, my name is Puppy
+
+cat.sound = function () {
+  console.log('meowww..');
+};
+
+dog.sound = function () {
+  console.log('woofff!!');
+};
+
+Animal.prototype.hello = function () {
+  // modify the function
+  console.log(`${this.name}'s the name. What's yours?`);
+};
+
+cat.hello(); // Kitty's the name. What's yours?
+dog.hello(); // Puppy's the name. What's yours?
+cat.sound(); // meowww..
+dog.sound(); // woofff!!
+```
+
 #### Inheritance
 
-- An object can be defined so that it inherits the properties and method of another object. For example, an object of "Employee" can inherit from the object of "User"
+An object can be defined so that it inherits the properties and method of another object. For example, an object of "Employee" can inherit from the object of "User"
 
 ```js
 /* This example shows how to define an object named 'boardRoom' that inherits the properties and methods of another object named'meetingRooms'. */
@@ -704,4 +738,217 @@ boardRoom.location = 'satellite'; // Creates own 'location' property on 'boardRo
 
 console.log(boardRoom.reservable());
 Output;
+```
+
+## Classes
+
+Can be defined using a class ===declaration=== or class ===expression===
+
+An instace of a class can be created by using the `new`keyword, which automatically calls the constructor of the class to initialze an object
+
+A class can inherit the properties and methods of another class using the `extends` keyword. Classes use prototype-based inheritance. The `constructor` of the child class must use the `super` keyword to call the constructor of the parent class before using `this` to assign values.
+
+Defining a class:
+
+```js
+// Class Declaration
+
+class ClassName {
+  // The constructor creates a new object, runs with the provided parameters, and assigns properties using the ‘this’ keyword.
+  constructor() {} // adding the constructor is optional
+  method1() {}
+  method2() {}
+}
+
+// Class Expression
+
+// Can be anonymous or named. The name is only availble in the scope of the class expression
+let ClassName = class OptionalName {
+  constructor() {}
+  method1() {}
+  method2() {}
+};
+```
+
+### Creating an Instance of a Class
+
+An instance of a class, i.e., an object, can be created by using the `new ClassName()`. The `new`keyword automatically calls the consructor of the class. Parameters can be passed to initialize the object with specific properties.
+
+```js
+// In this example, the 'MeetingRoom' class is used to create different meeting room objects.
+class MeetingRoom {
+  constructor(available) {
+    if (available) {
+      this.reservable = true;
+    }
+  }
+}
+
+// An instance of 'MeetingRoom' is created using the 'new' keyword and passing in a parameter.
+let boardRoom = new MeetingRoom(true);
+console.log(boardRoom); //MettingRoom {reservable: true}
+```
+
+### Class Constructor
+
+The constructor creates a new object, runs with the provided parameters, and assigns properties using the `this` keyword.
+
+```js
+// In this example, the class 'User' is set up to create user objects.
+class User {
+  constructor(user, email) {
+    this.user = user; // User and email are assigned to the instance using 'this'.
+    this.email = email;
+  }
+}
+// An instance of a 'User' is created by passing 'user' and 'email' as parameters.
+let user1 = new User('team_lead', 'team@cosmicsoft.com');
+console.log(user1); //User{user: "team_lead", email: "team@cosmicsoft.com"}
+```
+
+#### Invoking Class Methods
+
+```js
+class User {
+  constructor(firstName, lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+  fullName() {
+    return this.firstName + ' ' + this.lastName;
+  }
+}
+
+let user1 = new User('Sarah', 'James');
+console.log(user1.fullName());
+```
+
+#### Getters and Setters
+
+A getter can be added to a class to get the value of a property. A setter can be added to set the value of a property. A setter accepts exactly one parameter.
+
+```js
+// In thsi example, getter and setter are used for the 'canReserve' property.
+class MeetingRoom {
+  constructor(capacity) {
+    this.capacity = capacity;
+    this.canReserve = false;
+  }
+
+  set reservable(val) {
+    this.canReserve = val;
+  }
+
+  get reservable() {
+    return this.canReserve;
+  }
+}
+
+let boardRoom = new MettingRoom(20);
+boardRoom.reservable = true;
+
+console.log(boardRoom.reservable);
+```
+
+#### Static properties and methods
+
+We can also assign a method to the class as a whole. Such methods are called *static*.
+In a class declaration, they are prepended by `static` keyword, like this:
+
+```js
+class User {
+  static staticMethod() {
+    alert(this === User);
+  }
+}
+
+User.staticMethod(); // true
+```
+
+That actually does the same as assigning it as a property directly:
+
+```js
+class User {}
+User.staticMethod = function () {
+  alert(this === User);
+};
+
+User.staticMethod(); // true
+```
+
+The value of `this` in `User.staticMethod()` call is the class constructor `User` itself (the “object before dot” rule).
+
+Usually, static methods are used to implement functions that belong to the class as a whole, but not to any particular object of it.
+
+#### Class Inheritance
+
+A class can inherit the properties and methods of another class. For example, `Employee`class can inherit the properties and methods of the `User` class
+
+```js
+// This example shows two classes named 'User' and 'Employee'. The 'Employee' class extends the 'User' class.
+
+class User {
+  constructor() {
+    this.validUser = true;
+  }
+  isUser() {
+    return true;
+  }
+}
+
+class Employee extends User {
+  isEmployee() {
+    return true;
+  }
+}
+
+let employee1 = new Employee();
+
+console.log(employee1);
+console.log(employee1.isUser());
+console.log(employee1.isEmployee());
+```
+
+#### Super()
+
+Classes provide the `super` keyword which can be used inside the constructor of the child class to call the constructor of the parent class. Child classes must use `super` before using the `this` keyword to assign values.
+
+```js
+// this example shows what happens when the 'super' keyword is not used before the 'this' keyword in a child class
+
+class User {
+  constructor(user, email) {
+    this.user = user;
+    this.email = email;
+  }
+}
+
+class Employee extends User {
+  constructor(id) {
+    this.employeeID = id;
+  }
+}
+
+let employ1 = new Employee(1); //Uncaught reference error: Must call super costructor
+```
+
+```js
+// this example shows how to use the 'super' keyword in a class to call the constructor in the parent class
+
+class User {
+  constructor(user, email) {
+    this.user = user;
+    this.email = email;
+  }
+}
+
+class Employee extends User {
+  constructor(user, email, id) {
+    super(user, email);
+    this.employeeID = id;
+  }
+}
+
+let employ1 = new Employee('team_lead', 'team@comicsoft.com', 345);
+console.log(employ1);
 ```
