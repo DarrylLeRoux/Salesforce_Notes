@@ -415,3 +415,293 @@ objGreet.morningGreet.call(user1, '!'); // call invokes the function, and passes
 objGreet.eveningGreet.apply(user2, ['?']); // apply invokes the function, and passes in the 'punct' parameter as an array.
 objGreet.eveningGreet.bind(user1, '.')(); // bind returns a function and binds the 'punct' parameter to the function, which isinvoked using parentheses.Output
 ```
+
+## Objects
+
+### Introduction
+
+- There are three ways to create an object:
+  1. Using the `Object()`constructor
+  2. the object initializer - also known as the object literal syntax
+  3. The `Object.create()`method
+
+```js
+// Object() constructor
+let user1 = new Object();
+user1.name = 'Sam';
+user1.age = 35;
+user1.admin = false;
+user1.created = new Date();
+
+// Object initializer.
+let user2 = {
+  name: 'Mary',
+  age: 25,
+  admin: true,
+  created: new Date(),
+};
+
+// Object.create() method.
+let user3 = Object.create({});
+user3.name = 'Isabel';
+user3.age = 46;
+user3.admin = false;
+user3.created = new Date();
+```
+
+### Enumerating Object Properties
+
+- There are three ways of listing/traversing the properties of an object
+  1. for...in loop - can be utilized to traverse all the enumerable properties of an object and its prototype chain
+  2. `Objects.keys(0)`method can be used to get an array of all the own enumerable property names of an object named (o)
+  3. `Object.getOwnPropertyNames(o)`can be used to get all the own property names (enumerable or not) of an object names 'o'
+
+```js
+// These examples show how to enumerate the properties of the following object.
+let user2 = {
+  name: 'Mary',
+  age: 25,
+  admin: true,
+  created: new Date(),
+};
+
+// This example uses a 'for...in' loop to traverse the object properties.
+for (let prop in user2) {
+  console.log(prop, user2[prop]);
+}
+
+// This example uses 'Object.keys()' to grab the keys of the object in an array.
+console.log(Object.keys(user2));
+
+// This example uses 'Object.getOwnPropertyNames()' to grab the keys of the object.
+console.log(Object.getOwnPropertyNames(user2));
+```
+
+- Methods associated with the Object
+
+```js
+let user1 = {
+	firstName: "Mary",
+	lastName: "Smith",
+	age: 25;
+	greeting(greet) {
+		console.log(`$greet`)
+	}
+}
+
+// The greeting method is called with a 'greet' message passed in.
+user1.greeting('Good Morning')
+```
+
+### This
+
+- The `this`keyword can be used within an object method to refer to the current object. It can be used to get the properties of the object
+
+```js
+let user1 = {
+  firstName: 'Mary',
+  lastName: 'Smith',
+  age: 25,
+  greeting(greet) {
+    console.log(`${greet} ${this.firstName} ${this.lastName}`);
+  },
+};
+
+user1.greeting('Good morning');
+```
+
+### Getters and Setters
+
+- A getter can be defined in an object to get the value of a specific property. A setter can be defined in an object to set the value of a specific property. A getter is prefixed with `get` while a setter is prefixed with `set` and accepts one parameter.
+
+```js
+let user = {
+  name: 'John',
+  surname: 'Smith',
+};
+
+Object.defineProperty(user, 'fullName', {
+  get() {
+    return `${this.name} ${this.surname}`;
+  },
+
+  set(value) {
+    [this.name, this.surname] = value.split(' ');
+  },
+});
+
+alert(user.fullName); // John Smith
+for (let key in user) alert(key); // name, surname
+```
+
+### Passing by Reference vs Value
+
+- In JavaScript, objects are automatically passed by reference while primitives are passed by values.
+
+```js
+// When a variable is passed by value in a function argument, the value of the variable is copied into the function. Changes madeto the variable inside the function does not affect the variable outside the function.
+function passPrimitive(name) {
+  name = 'Jerry';
+}
+let person = 'Tom';
+passPrimitive(person);
+console.log(`Hi, my name is ${person}.`); // Hi my name is Tom.
+
+// When a variable is passed by reference in a function argument, the reference or address of the variable is passed into the function. Changes made to the variable inside the function will affect the variable outside the function.
+function passObject(settings) {
+  settings.on = true;
+}
+
+let conf = {
+  device: 'microwave',
+  on: false,
+};
+passObject(conf);
+console.log(conf); // {device: "microwave", on: true}
+```
+
+### The Arguments Object
+
+- Javascript allows any number of arguments to be passed into a function. They are automatically captured in non-rrow functions by a dynamic object called arguments
+
+```js
+// This example function sums parameters passed to it and uses the arguments object to retrieve the parameters
+function add() {
+  let sum = 0;
+  for (let i inarguments) {
+    sum += arguments[i]; // the arguments object is "Array-like"
+  }
+console.log(`The sum of the ${arguments.length} numbers is ${sum}`);
+
+// Standard Array methods are not available in "Array-like" objects.
+// So, the following will throw an error.
+  arguments.sort();
+}
+// This works, obviously
+add(62, 34, 45, 93);
+```
+
+### Object Class Methods
+
+- The Object class provides access to various static and instance methods. Some of the most commonly used static methods are as follows:
+
+1. `assign()`- used to copy all the enumerable own properties from one or more source objects to a target object.
+2. `entries()`- gets an array of all the key-value pairs of an objects own enumerbale string properties.
+3. `values()`- gets an array of all the values of an objects own enumerable string properties.
+4. `defineProperties()`- used to define new or modify existing properties of an object. Also `defineProperty()`can be used to work on a single property.
+5. `freeze()`- freezes an object such that changes can no longer be made to it.
+6. `preventExtensions()`- prevents the addition of new properties to a specified object.
+7. `seal()`- prevents new properties from being added as well as changes being made to descriptors.
+8. `is()`- used to determine whether two values are the same value.
+
+- Instance methods:
+
+1. `hasOwnProperty()`- used to determine whether an object contains the specified property as a direct property.
+2. `isPropertyOf()`- used to determine whether an object is in the prototype chain of the specified object.
+3. `toString()`- used to get the string representation of the specified object.
+4. `valueOf()`- used tp get the primitive value of the specified object.
+
+```js
+// In this example, 'Object.assign()' is used inside the 'cloneObject' function in order to clone any object passed in.
+
+function cloneObject(obj) {
+  return Object.assign({}, obj);
+}
+
+// This example illustrates the 'scores' object was cloned and is an entirely different object.
+
+let scores = {
+  quiz: 'Quiz 1',
+  scores: [90, 70, 60, 50, 40, 100, 60],
+};
+
+let newScores = cloneObject(scores);
+
+newScores.scores = [];
+
+console.log(scores, newScores);
+```
+
+```js
+/* In this example function, the 'hasOwnProperty' method is used so the function only returns the property value if it is owned bythe object. */
+function reservable(obj) {
+  if (obj.hasOwnProperty('canReserve')) {
+    return obj.canReserve;
+  } else {
+    returnfalse;
+  }
+}
+
+// This examples shows the application of the function.
+let meetingRoom = {
+  canReserve: true,
+  capacity: 20,
+};
+
+console.log(reservable(meetingRoom));
+```
+
+```js
+// example using the freeze method
+const user = {
+  role: 'guest',
+};
+Object.freeze(user);
+user.role = 'admin';
+console.log(user);
+
+// example using the preventExtensions methods
+const user = {
+  role: 'guest',
+};
+
+Object.preventExtensions(user);
+try {
+  Object.defineProperty(user, 'age', { value: 25 });
+} catch (e) {
+  console.log(e);
+}
+// example using the seal method
+const user = {
+  role: 'guest',
+};
+
+Object.seal(user);
+user.role = 'member';
+delete user.role; // unable to be deleted when sealedc
+onsole.log(user);
+```
+
+## Object Inheritance and Prototype Chain
+
+- Objects ==inherit== properties from at least one other object through the prototype chain. The ==prototype== is the object from which the properties are ==inherited==.
+
+#### Properties
+
+- When a property is accessed, it is sought on the object, the prototype of the object, the prototype of the prototype, and so on, until the end of the prototype chain is reached.
+
+#### Inheritance
+
+- An object can be defined so that it inherits the properties and method of another object. For example, an object of "Employee" can inherit from the object of "User"
+
+```js
+/* This example shows how to define an object named 'boardRoom' that inherits the properties and methods of another object named'meetingRooms'. */
+let meetingRooms = {
+  reservable() {
+    if (this.hasOwnProperty('canReserve')) {
+      return this.canReserve;
+    } else {
+      return false;
+    }
+  },
+  location: 'mainBuilding',
+};
+
+let boardRoom = Object.create(meetingRooms);
+boardRoom.canReserve = true;
+boardRoom.capacity = 20;
+boardRoom.location = 'satellite'; // Creates own 'location' property on 'boardRoom'.
+
+console.log(boardRoom.reservable());
+Output;
+```
