@@ -1471,3 +1471,100 @@ let product = new Product('YK232', 'Apples');
 product.getProduct = () => {};
 console.log(product.getProduct());
 ```
+
+## Scope
+
+#### Introduction
+
+Scope is the current context of code execution. It determines the visibility of values and expressions. A value is unavailable if it is not in the current scope. Furthermore, child scopes have access to variables in the parent scope, but not vice versa.
+
+```js
+function fullName(firstName) {
+  var lastName = 'Jones';
+}
+
+console.log('Peter' + lastName); // Uncaught ReferenceError: lastName is not defined
+```
+
+According to the principle of least privilege, any user, program or module should only have access to the information and resources that are essential for its functioning. This principle can be applied to variables and their scopes.
+
+```js
+// This example shows a function in JavaScript that follows the principle of least privilege. (Part 1 of 2)
+async function getDataFromServer() {
+  // Function only accessible from within getDataFromServer function
+  function formatReceivedData(receivedData) {
+    // Local variable only accessible within formatReceivedData function
+    var output = receivedData.text();
+    // Implementation here
+    // ...
+
+    return output;
+  }
+  // Local variable only accessible within getDataFromServer function
+  var data;
+
+  try {
+    data = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+    data = await formatReceivedData(data);
+
+    console.log(`data here: ${data}`);
+    return data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+  // End of getDataFromServer function
+}
+getDataFromServer(); // call method
+```
+
+#### Global Scope
+
+Variables declared in the global scope are accessible throughout the Javascript document
+
+```js
+var applicationName = 'complaints portal';
+
+function logger() {
+  console.log(applicationName); // "complaints portal"
+}
+```
+
+#### Function Scope
+
+Variables declared in the function scope are accessible only within the declared function and any nested functions within. Variables declared inside of a function belong to the function scope.
+
+```js
+// This example shows a local variable that can only be accessed inside the function in which it is declared.
+function power(x, n) {
+  // Define local variable in power function
+  var value;
+  if (n == 1) {
+    value = x;
+  } else {
+    value = x * power(x, n - 1);
+  }
+  return value;
+}
+console.log('2 ^ 10 = ' + power(2, 10));
+// Access local variable outside of power function
+console.log('Value => ' + value);
+```
+
+#### Block Scope
+
+Variables declared in the block scope are accessible only within the block of code. The space between two curly braces is referred to as a block. ES6 introduced the keywords `let` and `const` to allow developers to declare variables in the block scope.
+
+```js
+// This example shows a block variable that can only be accessed inside the block in which it is declared.
+function filterUser(type, users) {
+  if (type == 'BUYER') {
+    // Define and access block variable inside block
+    let filteredBuyers = users.filter((user) => user.type == 1);
+    console.log(filteredBuyers);
+  }
+  // Access block variable outside of block
+  console.log(filteredBuyers);
+  return filteredBuyers;
+}
+```
