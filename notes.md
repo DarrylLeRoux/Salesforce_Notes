@@ -1568,3 +1568,222 @@ function filterUser(type, users) {
   return filteredBuyers;
 }
 ```
+
+###Event Handler
+The **`addEventListener()`** method of the [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) interface sets up a function that will be called whenever the specified event is delivered to the target.
+
+Common targets are [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element), or its children, [`Document`](https://developer.mozilla.org/en-US/docs/Web/API/Document), and [`Window`](https://developer.mozilla.org/en-US/docs/Web/API/Window), but the target may be any object that supports events (such as [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest)).
+
+### [The event listener callback](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#the_event_listener_callback)
+
+The event listener can be specified as either a callback function or an object whose `handleEvent()` method serves as the callback function.
+
+The callback function itself has the same parameters and return value as the `handleEvent()` method; that is, the callback accepts a single parameter: an object based on [`Event`](https://developer.mozilla.org/en-US/docs/Web/API/Event) describing the event that has occurred, and it returns nothing.
+
+For example, an event handler callback that can be used to handle both [`fullscreenchange`](https://developer.mozilla.org/en-US/docs/Web/API/Element/fullscreenchange_event 'fullscreenchange') and [`fullscreenerror`](https://developer.mozilla.org/en-US/docs/Web/API/Element/fullscreenerror_event 'fullscreenerror') might look like this:
+
+```js
+function eventHandler(event) {
+  if (event.type === 'fullscreenchange') {
+    /* handle a full screen toggle */
+  } else {
+    /* handle a full screen toggle error */
+  }
+}
+```
+
+### [Event listener with anonymous function](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#event_listener_with_anonymous_function)
+
+Here, we'll take a look at how to use an anonymous function to pass parameters into the event listener.
+
+#### HTML
+
+```html
+<table id="outside">
+  <tr>
+    <td id="t1">one</td>
+  </tr>
+  <tr>
+    <td id="t2">two</td>
+  </tr>
+</table>
+```
+
+#### JavaScript
+
+```js
+// Function to change the content of t2
+function modifyText(new_text) {
+  const t2 = document.getElementById('t2');
+  t2.firstChild.nodeValue = new_text;
+}
+
+// Function to add event listener to table
+const el = document.getElementById('outside');
+el.addEventListener(
+  'click',
+  function () {
+    modifyText('four');
+  },
+  false
+);
+```
+
+Notice that the listener is an anonymous function that encapsulates code that is then, in turn, able to send parameters to the `modifyText()` function, which is responsible for actually responding to the event.
+
+Please note that while anonymous and arrow functions are similar, they have different `this` bindings. While anonymous (and all traditional JavaScript functions) create their own `this` bindings, arrow functions inherit the `this` binding of the containing function.
+
+That means that the variables and constants available to the containing function are also available to the event handler when using an arrow function.
+
+### [Event listener with multiple options](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#event_listener_with_multiple_options)
+
+You can set more than one of the options in the `options` parameter. In the following example we are setting two options:
+
+- `passive`, to assert that the handler will not call [`preventDefault()`](https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault 'preventDefault()')
+- `once`, to ensure that the event handler will only be called once.
+
+#### HTML
+
+```html
+<button id="example-button">You have not clicked this button.</button>
+<button id="reset-button">Click this button to reset the first button.</button>
+```
+
+#### JavaScript
+
+```js
+const buttonToBeClicked = document.getElementById('example-button');
+
+const resetButton = document.getElementById('reset-button');
+
+// the text that the button is initialized with
+const initialText = buttonToBeClicked.textContent;
+
+// the text that the button contains after being clicked
+const clickedText = 'You have clicked this button.';
+
+// we hoist the event listener callback function
+// to prevent having duplicate listeners attached
+function eventListener() {
+  buttonToBeClicked.textContent = clickedText;
+}
+
+function addListener() {
+  buttonToBeClicked.addEventListener('click', eventListener, {
+    passive: true,
+    once: true,
+  });
+}
+
+// when the reset button is clicked, the example button is reset,
+// and allowed to have its state updated again
+resetButton.addEventListener('click', () => {
+  buttonToBeClicked.textContent = initialText;
+  addListener();
+});
+
+addListener();
+```
+
+### [The value of "this" within the handler](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#the_value_of_this_within_the_handler)
+
+It is often desirable to reference the element on which the event handler was fired, such as when using a generic handler for a set of similar elements.
+
+When attaching a handler function to an element using `addEventListener()`, the value of [`this`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this) inside the handler will be a reference to the element. It will be the same as the value of the `currentTarget` property of the event argument that is passed to the handler.
+
+```js
+my_element.addEventListener('click', function (e) {
+  console.log(this.className); // logs the className of my_element
+  console.log(e.currentTarget === this); // logs `true`
+});
+```
+
+As a reminder, [arrow functions do not have their own `this` context](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#no_separate_this).
+
+```js
+my_element.addEventListener('click', (e) => {
+  console.log(this.className); // WARNING: `this` is not `my_element`
+  console.log(e.currentTarget === this); // logs `false`
+});
+```
+
+If an event handler (for example, [`onclick`](https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event 'onclick')) is specified on an element in the HTML source, the JavaScript code in the attribute value is effectively wrapped in a handler function that binds the value of `this` in a manner consistent with the `addEventListener()`; an occurrence of `this` within the code represents a reference to the element.
+
+```html
+<table id="my_table" onclick="console.log(this.id);">
+  <!-- `this` refers to the table; logs 'my_table' -->
+  …
+</table>
+```
+
+Note that the value of `this` inside a function, *called by* the code in the attribute value, behaves as per [standard rules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this). This is shown in the following example:
+
+```html
+<script>
+  function logID() {
+    console.log(this.id);
+  }
+</script>
+<table id="my_table" onclick="logID();">
+  <!-- when called, `this` will refer to the global object -->
+  …
+</table>
+```
+
+The value of `this` within `logID()` is a reference to the global object [`Window`](https://developer.mozilla.org/en-US/docs/Web/API/Window) (or `undefined` in the case of [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode).
+
+#### Specifying "this" using bind()
+
+The [`Function.prototype.bind()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) method lets you establish a fixed `this` context for all subsequent calls — bypassing problems where it's unclear what `this` will be, depending on the context from which your function was called. Note, however, that you'll need to keep a reference to the listener around so you can remove it later.
+
+This is an example with and without `bind()`:
+
+```js
+const Something = function (element) {
+  // |this| is a newly created object
+  this.name = 'Something Good';
+  this.onclick1 = function (event) {
+    console.log(this.name); // undefined, as |this| is the element
+  };
+
+  this.onclick2 = function (event) {
+    console.log(this.name); // 'Something Good', as |this| is bound to newly created object
+  };
+
+  // bind causes a fixed `this` context to be assigned to onclick2
+  this.onclick2 = this.onclick2.bind(this);
+
+  element.addEventListener('click', this.onclick1, false);
+  element.addEventListener('click', this.onclick2, false); // Trick
+};
+const s = new Something(document.body);
+```
+
+Another solution is using a special function called `handleEvent()` to catch any events:
+
+```js
+const Something = function (element) {
+  // |this| is a newly created object
+  this.name = 'Something Good';
+  this.handleEvent = function (event) {
+    console.log(this.name); // 'Something Good', as this is bound to newly created object
+    switch (event.type) {
+      case 'click':
+        // some code here…
+        break;
+      case 'dblclick':
+        // some code here…
+        break;
+    }
+  };
+
+  // Note that the listeners in this case are |this|, not this.handleEvent
+  element.addEventListener('click', this, false);
+  element.addEventListener('dblclick', this, false);
+
+  // You can properly remove the listeners
+  element.removeEventListener('click', this, false);
+  element.removeEventListener('dblclick', this, false);
+};
+const s = new Something(document.body);
+```
